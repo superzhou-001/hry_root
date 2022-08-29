@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.website.dao.AdContentManageDao">
+
+
+    <resultMap id="BaseResultMap" type="hry.platform.website.model.AdContentManage">
+    </resultMap>
+
+    <select id="findPageBySql" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        acm.*,
+        apm.adPositionName AS adPositionName,
+        apm.adPositionKey AS adPositionKey
+        FROM
+        ad_content_manage acm
+        LEFT JOIN ad_position_manage apm ON acm.adpId = apm.id
+        <where>
+            1=1
+            <if test="adContentTitle != null and adContentTitle != '' ">
+                and acm.adContentTitle like #{adContentTitle,jdbcType=VARCHAR}
+            </if>
+            <if test="adPositionName != null and adPositionName != '' ">
+                and apm.adPositionName like #{adPositionName,jdbcType=VARCHAR}
+            </if>
+            <if test="adPositionKey != null and adPositionKey != '' ">
+                and apm.adPositionKey like #{adPositionKey,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by acm.id desc
+    </select>
+
+</mapper>

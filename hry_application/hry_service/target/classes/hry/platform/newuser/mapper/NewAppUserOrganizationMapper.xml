@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppUserOrganizationDao"   >
+
+	<resultMap id="BaseResultMap" type="hry.platform.newuser.model.NewAppUserOrganization">
+	</resultMap>
+
+	<delete id="removeByAppUserId" parameterType="java.lang.String">
+		delete from new_app_user_organization where  userId = #{userId}
+	</delete>
+
+	<select id="findByAppUser" resultMap="BaseResultMap" >
+		select * from new_app_user_organization where userId = #{0}  and type= #{1}
+	</select>
+
+	<select id="findUserOrganization" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT auo.*, ao.`name` as organizationName
+		FROM new_app_user_organization auo
+		LEFT JOIN new_app_organization ao
+		ON auo.organizationid = ao.id
+		WHERE auo.userid = #{userid}
+	</select>
+
+	<select id="findPageBySql" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT auo.*, ao.`name` as organizationName,
+		au.`name`, au.userName, au.islock
+		FROM new_app_user_organization auo
+		LEFT JOIN new_app_organization ao
+		ON auo.organizationid = ao.id
+		LEFT JOIN new_app_user au
+		ON auo.userid = au.id
+		WHERE auo.organizationid = #{organizationid}
+		<if test="userid != null and userid != ''">
+			and au.id != #{userid}
+		</if>
+		<if test="name != null and name != ''">
+			and au.`name` like #{name}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			and auo.created >= #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			and auo.created<![CDATA[ <= ]]> #{endTime}
+		</if>
+	</select>
+</mapper>

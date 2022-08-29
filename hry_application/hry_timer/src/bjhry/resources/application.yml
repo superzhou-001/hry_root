@@ -1,0 +1,115 @@
+server:
+  port: 7760
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://192.168.0.52:7700/eureka/
+
+elasticsearch:
+  host: 192.168.0.52:9200
+  username: elastic
+  password: Credit2020Admin
+
+# spring配置
+spring:
+  application:
+    name: hry-application-timer
+  # 数据源配置
+  datasource:
+    url: jdbc:mysql://192.168.0.52:3306/hry_boot?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: Credit_2016Admin
+    #password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      initial-size: 1
+      min-idle: 1
+      max-active: 1000
+      test-on-borrow: true
+  rabbitmq:
+    host: 192.168.0.51
+    port: 5672
+    username: qq
+    password: 1234
+    virtual-host: /qq
+    exchangeName: finance.direct.exchange
+    # 重试机制
+    listener:
+      simple:
+        retry:
+          #是否开启消费者重试（为false时关闭消费者重试）
+          enabled: true
+          #最大重试次数
+          max-attempts: 5
+          #最大间隔时间
+          max-interval: 20000ms
+          #重试间隔时间 3秒
+          initial-interval: 3000ms
+          #乘子  重试间隔*乘子得出下次重试间隔  3s  6s  12s  24s  此处24s>20s  走20s
+          multiplier: 2
+        #重试次数超过上面的设置之后是否丢弃（false不丢弃时需要写相应代码将该消息加入死信队列）
+        default-requeue-rejected: true
+  http:
+  servlet:
+    multipart:
+      #限制上传文件大小最大为10M
+      max-file-size: 1073741824
+
+# mybatis配置
+mybatis:
+  mapper-locations: classpath*:hry/**/mapper/*.xml
+  configuration:
+    default-fetch-size: 100
+    #mybatis日志
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+# 通用mapper配置
+mapper:
+  mappers:
+    - hry.core.mvc.dao.BaseDao
+  not-empty: false
+  identity: MYSQL
+  #    before: true
+
+# 分页配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+# redis配置
+redis:
+  modeService: redisSingletonServiceImpl # redisClusterServiceImpl 集群模式  redisSingletonServiceImpl 单机模式
+  password: Credit2016Admin
+  maxTotal: 500
+  #redis 单机模式配置
+  url: 192.168.0.52
+  port: 6379
+  #redis集群模式配置
+  database: 0
+  timeout: 3000
+  cluster:
+    #设置key的生存时间，当key过期时，它会被自动删除；
+    expire-seconds: 120
+    #设置命令的执行时间，如果超过这个时间，则报错;
+    command-timeout: 5000
+    #设置redis集群的节点信息，其中namenode为域名解析，通过解析域名来获取相应的地址;
+    nodes: 192.168.0.52:3000, 192.168.0.52:3001, 192.168.0.52:3002, 192.168.0.52:3003, 192.168.0.52:3004, 192.168.0.52:3005
+  jedis:
+    pool:
+      max-idle: 300 # 最大空闲实例的个数
+      min-idle: 100 #最小空闲实例个数
+
+app:
+  oss:
+    open: true
+    endpoint: http://oss-cn-beijing.aliyuncs.com
+    accessKeyId: LTAI4GEoDaSxsg4TPHjr1sHP
+    accessKeySecret: sq8IZ4DHqq3UlASKnddqPUzxVpzvlF
+    privateBucketName: hry-exchange-private
+    publicBucketName: hry-exchange-public
+  oauthKey: 49e168f90a094588bc59bec9c4659eb1
+  oauthIp: 172.31.107.245

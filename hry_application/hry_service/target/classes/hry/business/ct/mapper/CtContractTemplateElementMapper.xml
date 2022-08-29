@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.ct.dao.CtContractTemplateElementDao">
+
+    <resultMap id="BaseResultMap" type="hry.business.ct.model.CtContractTemplateElement">
+    </resultMap>
+
+    <select id="findElementByTemplateId" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        ccte.*,
+        cce.elementKey,
+        cce.elementValue,
+        cce.elementName,
+        cce.elementFormat,
+        cce.tableName,
+        cce.tableField,
+        cce.valueConditions,
+        cce.remark as ccrRemark
+        FROM
+        ct_contract_template_element ccte
+        LEFT JOIN ct_contract_element cce ON ccte.contractElementId = cce.id
+        <where>
+            1=1 and
+            ccte.contractTemplateId = #{templateId}
+        </where>
+    </select>
+
+
+</mapper>

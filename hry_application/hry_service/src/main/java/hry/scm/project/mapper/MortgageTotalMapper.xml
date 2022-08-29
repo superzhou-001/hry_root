@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.scm.project.dao.MortgageTotalDao">
+    <resultMap id="BaseResultMap" type="hry.scm.project.model.MortgageTotal"></resultMap>
+
+    <select id="findTotalBySql" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select s.goodsName,SUM(s.weight) as totalWeight,s.creditCode from scm_storage s
+        <where>
+            1=1
+            <if test="isMortgage !=null and isMortgage!='' ">
+                and s.isMortgage = #{isMortgage}
+            </if>
+            <if test="creditCode !=null and creditCode!='' ">
+                and s.creditCode = #{creditCode}
+            </if>
+        </where>
+        GROUP BY s.creditCode, s.goodsName
+    </select>
+
+    <select id="findMortWeight" parameterType="java.util.Map"
+            resultType="java.math.BigDecimal" >
+        SELECT IFNULL(SUM(mortWeight*mortPrice),0) from scm_mortgage_total
+        <where>
+           1=1
+            <if test="projectId!=null and projectId!='' ">
+                AND projectId= #{projectId}
+            </if>
+            <if test="totalId!=null and totalId!='' ">
+                AND id!= #{totalId}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.cu.dao.CuIntentionFollowCommentDao">
+    <resultMap type="hry.business.cu.model.CuIntentionFollowComment" id="commentMap">
+        <id column="id" property="id"/>
+        <collection property="list" ofType="hry.business.cu.model.CuIntentionFollowComment" column="id" select="findCommentByParentId"/>
+    </resultMap>
+
+    <select id="findAllCommentByFollowId" resultMap="commentMap">
+		SELECT cifc.* FROM cu_intention_follow_comment cifc WHERE cifc.intentionfollowId=#{intentionfollowId} and cifc.parentId =0
+	</select>
+
+    <select id="findCommentByParentId" resultType="hry.business.cu.model.CuIntentionFollowComment">
+		SELECT cifc.* FROM cu_intention_follow_comment cifc WHERE cifc.parentId = #{id}
+	</select>
+
+    <select id="findCommentByIntentionId" resultType="hry.business.cu.model.CuIntentionFollowComment">
+		SELECT
+            cifc.*, cifc2.userName AS parentUserName,
+            cifc2.content AS parentContent,
+            cifc2.created AS parentCreated
+        FROM
+            cu_intention_follow_comment cifc
+        LEFT JOIN cu_intention_follow_comment cifc2 ON cifc.parentId = cifc2.id
+        WHERE
+            cifc.intentionId = #{intentionId}
+	</select>
+</mapper>

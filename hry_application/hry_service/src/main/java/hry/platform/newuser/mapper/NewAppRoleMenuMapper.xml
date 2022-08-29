@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppRoleMenuDao"   >
+    <!--个人登录首次加载的菜单-->
+	<select id="findUserMenuRoleByuserId" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT
+            narm.menukey
+        FROM
+            new_app_user_role naur
+        LEFT JOIN new_app_role_menu narm ON naur.roleid = narm.roleid
+        LEFT JOIN new_app_menu nam on narm.menukey = nam.mkey
+        <where>
+            1 = 1
+            <if test="userId!=null and userId!='' " >
+                and naur.userid = #{userId}
+            </if>
+            and nam.`name` = 'root'
+            and nam.appname != 'rule'
+        </where>
+        ORDER BY narm.id
+    </select>
+
+    <select id="findMenuRoleByuserId" resultType="hry.platform.newuser.model.NewAppMenu" parameterType="java.util.Map">
+        SELECT
+          nam.*
+        FROM
+          new_app_user_role naur
+        LEFT JOIN new_app_role_menu narm ON naur.roleid = narm.roleid
+        LEFT JOIN new_app_menu nam on narm.menukey = nam.mkey
+        <where>
+            1 = 1
+            <if test="userId!=null and userId!='' " >
+                and naur.userid = #{userId}
+            </if>
+            and nam.type = 'menu'
+            and nam.appname != 'rule'
+        </where>
+        ORDER BY nam.orderno
+    </select>
+
+    <select id="loadmenubyroleid" resultType="hry.platform.newuser.model.NewAppMenu" parameterType="java.util.Map">
+        SELECT
+            nam.*
+        FROM
+            new_app_role_menu narm
+        LEFT JOIN new_app_menu nam ON narm.menukey = nam.mkey
+        <where>
+            1 = 1
+            <if test="roleid!=null and roleid!='' " >
+              and narm.roleid = #{roleid}
+            </if>
+            and nam.appname != 'rule'
+        </where>
+        ORDER BY
+            nam.orderno
+    </select>
+</mapper>

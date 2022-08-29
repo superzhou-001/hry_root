@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.website.dao.AppUserStationDao">
+    <resultMap id="baseResultMap" type="hry.platform.website.model.AppUserStation"></resultMap>
+    <select id="findUserStationList" resultMap="baseResultMap" parameterType="java.util.Map">
+        select aus.id, aus.stationId, ac.contentTitle, aus.readTime, aus.`status`,aus.created
+        from
+        app_user_station aus
+        LEFT JOIN app_station_content ac
+        ON aus.stationId = ac.id
+        where aus.userId = #{userId}
+        <if test="contentTitle != null and contentTitle != ''">
+            and ac.contentTitle like #{contentTitle}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and aus.created >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and aus.created <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="status != null and status != ''">
+            and aus.`status` = #{status}
+        </if>
+        <if test="userType != null and userType != ''">
+            and aus.userType = #{userType}
+        </if>
+        and aus.`status` != 2
+        ORDER By aus.id DESC
+    </select>
+</mapper>

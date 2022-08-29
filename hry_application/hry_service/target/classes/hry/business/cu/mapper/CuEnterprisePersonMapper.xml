@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.cu.dao.CuEnterprisePersonDao">
+
+
+    <resultMap id="BaseResultMap" type="hry.business.cu.model.CuPerson">
+    </resultMap>
+
+    <select id="findPageBySql" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        cp.*,
+        cep.type as personType,
+        cep.id as cuEnterprisePersonId,
+        cep.isMainPerson as isMainPerson
+        FROM
+        cu_enterprise_person cep
+        LEFT JOIN cu_person AS cp ON cep.personId = cp.id
+        <where>
+            1=1 and cep.enterpriseId = #{enterpriseId,jdbcType=BIGINT}
+            <if test="type != null and type != '' ">
+                and cep.type = #{type,jdbcType=INTEGER}
+            </if>
+        </where>
+        order by cep.id desc
+    </select>
+
+    <select id="getCuEnterprisePersonByEnterpriseIdAndType" parameterType="java.util.Map"
+            resultType="hry.business.cu.model.CuPerson">
+        SELECT
+        cp.*,
+        cep.type as personType,
+        cep.id as cuEnterprisePersonId
+        FROM
+        cu_enterprise_person cep
+        LEFT JOIN cu_person AS cp ON cep.personId = cp.id
+        <where>
+            1=1 and cep.enterpriseId = #{enterpriseId}
+            and cep.type = #{type}
+        </where>
+    </select>
+
+    <select id="findCuEnterprisePersonByEnterpriseIdAndType" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        cp.*,
+        cep.type as personType,
+        cep.id as cuEnterprisePersonId
+        FROM
+        cu_enterprise_person cep
+        LEFT JOIN cu_person AS cp ON cep.personId = cp.id
+        <where>
+            1=1 and cep.enterpriseId = #{enterpriseId,,jdbcType=BIGINT}
+            and cep.type = #{type,,jdbcType=INTEGER}
+        </where>
+    </select>
+
+    <update id="updatwIsMainPerson">
+        update user set isMainPerson= 2
+        where enterpriseId=#{enterpriseId} and type=3 and isMainPerson= 1
+    </update>
+
+
+</mapper>

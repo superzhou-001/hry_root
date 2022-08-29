@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppUserUpordownDao">
+    <resultMap id="pageBySqlMap" type="hry.platform.newuser.model.NewAppUserUpordown"></resultMap>
+    <select id="findUserUpOrDownList" resultMap="pageBySqlMap" parameterType="java.util.Map">
+        select au.`name`, au.islock,
+        auo.organizationid,
+        ao.`name` as organizationName,
+        auu.otheruserid, auu.userid, auu.type, auu.created
+        from new_app_user_upordown auu
+        LEFT JOIN
+        new_app_user au
+        ON auu.otheruserid = au.id
+        LEFT JOIN
+        new_app_user_organization auo
+        ON auu.otheruserid = auo.userid
+        LEFT JOIN
+        new_app_organization ao
+        ON auo.organizationid = ao.id
+        where auu.userid = #{userid}
+        <if test="name != null and name != ''">
+            and au.`name` like #{name}
+        </if>
+        <if test="organizationid != null and organizationid != ''">
+            and auo.organizationid = #{organizationid}
+        </if>
+        <if test="type != null and type != ''">
+            and auu.type = #{type}
+        </if>
+    </select>
+</mapper>

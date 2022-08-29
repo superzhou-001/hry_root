@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.ct.dao.CtContractTemplateDao">
+    <resultMap id="BaseResultMap" type="hry.business.ct.model.CtContractTemplate">
+    </resultMap>
+    <select id="getContractTemplateById" parameterType="java.util.Map"
+            resultType="hry.business.ct.model.CtContractTemplate">
+        SELECT
+        cct.*, cctp.typeName as typeName,cctp.purposeType as purposeType
+        FROM
+        ct_contract_template cct
+        LEFT JOIN ct_contract_type cctp ON cct.contractTypeId = cctp.id
+        <where>
+            1=1 and cct.id = #{id}
+        </where>
+    </select>
+
+    <select id="findContractTemplate" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        cct.*, cctp.typeName as typeName,cctp.purposeType as purposeType
+        FROM
+        ct_contract_template cct
+        LEFT JOIN ct_contract_type cctp ON cct.contractTypeId = cctp.id
+        <where>
+            1=1
+            <if test="contractTypeId != null and contractTypeId != '' ">
+                and cct.contractTypeId = #{contractTypeId,jdbcType=BIGINT}
+            </if>
+            <if test="templateName != null and templateName != '' ">
+                and cct.templateName like #{templateName,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+</mapper>

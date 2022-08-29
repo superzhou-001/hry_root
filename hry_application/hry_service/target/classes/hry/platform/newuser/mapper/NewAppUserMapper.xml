@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppUserDao">
+
+	<resultMap id="BaseResultMap" type="hry.platform.newuser.model.NewAppUser">
+	</resultMap>
+	<select id="findPageBySql" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT
+		a.id,
+		a.mobile,
+		a.name,
+		a.username,
+		a.email,
+		a.weChat,
+		a.created,
+		a.modified,
+		a.islock,
+		a.address,
+		a.ukeyState,
+		a.googleState,
+		(SELECT
+		GROUP_CONCAT(ar.`name`)
+		FROM
+		new_app_role AS ar
+		LEFT JOIN new_app_user_role AS aur ON ar.id = aur.roleId
+		where aur.userId
+		= a.id) as roleName,
+
+		(SELECT
+		ao.name
+		FROM
+			new_app_organization AS ao
+		LEFT JOIN new_app_user_organization AS auo ON ao.id = auo.organizationId
+		where auo.userId = a.id
+		order by auo.type desc
+		limit 1
+
+		) as departmentName
+
+		FROM
+		new_app_user as a
+		LEFT JOIN new_app_user_organization as ao
+		on a.id = ao.userId
+		where 1=1
+		<if test="organizationId!=null and organizationId!='' ">
+			and ao.organizationId in
+			<foreach item="item" index="index" collection="ids" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="name!=null and name!='' ">
+			and a.name like #{name}
+		</if>
+		<if test="username!=null and username!='' ">
+			and a.username like #{username}
+		</if>
+		<if test="mobilePhone!=null and mobilePhone!='' ">
+			and a.mobilePhone like #{mobilePhone}
+		</if>
+		<if test="notUserName != null and notUserName != ''">
+		   and a.username != #{notUserName}
+		</if>
+		GROUP BY a.id
+	</select>
+
+
+	<select id="findNotUserOrganList" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select au.id, au.userName, au.islock, au.`name`, au.email, au.mobile, au.weChat, au.address
+		from new_app_user au
+		LEFT JOIN new_app_user_organization auo
+		ON au.id = auo.userid
+		WHERE 1=1
+		and auo.organizationid is null
+		<if test="name!=null and name!='' ">
+			and au.name like #{name}
+		</if>
+		<if test="userName!=null and userName!='' ">
+			and au.userName like #{userName}
+		</if>
+		<if test="notUserName != null and notUserName != ''">
+			and au.username != #{notUserName}
+		</if>
+	</select>
+
+</mapper>

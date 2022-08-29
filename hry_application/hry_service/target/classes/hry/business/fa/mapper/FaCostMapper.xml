@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.fa.dao.FaCostDao">
+    <resultMap id="baseResultMap" type="hry.business.fa.model.FaCost"></resultMap>
+    <select id="findFaCostList" parameterType="java.lang.Long" resultMap="baseResultMap">
+        select fc.*, fcn.nlmsname
+        from fa_product_cost fpc
+        LEFT JOIN fa_cost fc
+        ON fpc.costid = fc.id
+        LEFT JOIN fa_cost_nlms fcn
+        ON fc.nlmsid = fcn.id
+        WHERE fpc.productid = #{productid}
+    </select>
+</mapper>

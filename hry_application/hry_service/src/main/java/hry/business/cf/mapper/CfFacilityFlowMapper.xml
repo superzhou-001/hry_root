@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.cf.dao.CfFacilityFlowDao">
+    <resultMap id="BaseResultMap" type="hry.business.cf.model.CfFacilityFlow">
+    </resultMap>
+    <select id="findPageBySql" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+            cff.*, ce.`name` AS sellEnterpriseName,
+            cee.`name` AS coreEnterpriseName
+            <if test="type != null and type != '' and (type == 1 or type == 2)">
+                ,cfa.totalAmount as totalAmount
+                ,cfa.surplusAmount as surplusAmount
+            </if>
+        FROM
+            cf_facility_flow cff
+        LEFT JOIN cu_enterprise ce ON ce.id = cff.sellEnterpriseId
+        LEFT JOIN cu_enterprise cee ON cee.id = cff.coreEnterpriseId
+        <if test="type != null and type != '' and type == 1">
+            LEFT JOIN cf_facility_amount cfa ON cfa.enterpriseId = cff.sellEnterpriseId
+        </if>
+        <if test="type != null and type != '' and type == 2">
+            LEFT JOIN cf_facility_amount cfa ON cfa.enterpriseId = cff.coreEnterpriseId
+        </if>
+
+        <where>
+            1=1
+            <if test="facilityType != null and facilityType != '' ">
+                and cff.facilityType = #{facilityType,jdbcType=INTEGER}
+            </if>
+            <if test="facilityCode != null and facilityCode != '' ">
+                and cff.facilityCode like #{facilityCode,jdbcType=VARCHAR}
+            </if>
+            <if test="sellEnterpriseName != null and sellEnterpriseName != '' ">
+                and cff.sellEnterpriseName like #{sellEnterpriseName,jdbcType=VARCHAR}
+            </if>
+            <if test="coreEnterpriseName != null and coreEnterpriseName != '' ">
+                and cff.coreEnterpriseName like #{coreEnterpriseName,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

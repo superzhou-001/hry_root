@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppUserGroupDao">
+    <resultMap id="BaseResultMap" type="hry.platform.newuser.model.NewAppUserGroup"></resultMap>
+    <select id="findUserGroup" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT aug.groupid, aug.userid, au.`name`, auo.organizationid, au.islock
+        FROM new_app_user_group aug
+        LEFT JOIN
+        new_app_user au
+        ON aug.userid = au.id
+        LEFT JOIN
+        new_app_user_organization auo
+        ON auo.userid = au.id
+        LEFT JOIN
+        new_app_organization ao
+        ON auo.organizationid = ao.id
+        where aug.groupid = #{groupid}
+    </select>
+
+    <select id="findUserGroupList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT aug.*, ag.`name` as groupName
+        FROM new_app_user_group aug
+        LEFT JOIN new_app_group ag
+        ON aug.groupid = ag.id
+        WHERE aug.userid = #{userid}
+	</select>
+</mapper>

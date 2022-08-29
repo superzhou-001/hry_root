@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.cf.dao.CfFacilityMortgageDao">
+
+    <resultMap id="BaseResultMap" type="hry.business.cf.model.CfFacilityMortgage">
+    </resultMap>
+
+    <select id="findPageBySql" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+            cfm.*,
+            IF ( cfm.customerType = 1,
+            (SELECT NAME FROM cu_person WHERE id = cfm.mortgageSubjectId LIMIT 1 ),
+            (SELECT NAME FROM cu_enterprise WHERE id = cfm.mortgageSubjectId LIMIT 1 )
+            ) as ownershipName
+            FROM
+                cf_facility_mortgage cfm
+            ORDER BY
+        cfm.id DESC
+    </select>
+
+</mapper>

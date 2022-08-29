@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.fa.dao.FaFactoringCostDao">
+    <resultMap id="BaseResultMap" type="hry.business.fa.model.FaFactoringCost">
+    </resultMap>
+
+    <select id="findPageBySql" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        `ffc`.`id` AS `id`,
+        `ffc`.`projectId` AS `projectId`,
+        `ffc`.`factoringId` AS `factoringId`,
+        `ffc`.`costname` AS `costname`,
+        `ffc`.`type` AS `type`,
+        `ffc`.`nlmsid` AS `nlmsid`,
+        `ffc`.`nlms` AS `nlms`,
+        `ffc`.`costmoney` AS `costmoney`,
+        `ffc`.`costtype` AS `costtype`,
+        `ffc`.`status` AS `status`,
+        `ffc`.`remark` AS `remark`,
+        `ffc`.`created` AS `created`,
+        `ffc`.`modified` AS `modified`,
+        `ffc`.`receivableDate` AS `receivableDate`,
+        `ffc`.`paidDate` AS `paidDate`,
+        `ffc`.`verifyDate` AS `verifyDate`,
+        `ffc`.`paidMoney` AS `paidMoney`,
+        `fff`.`projectCode` AS `projectCode`,
+        `fff`.`financingMoney` AS `financingMoney`,
+        `fp`.`typename` AS `typeName`,
+        `ce`.`name` AS `sellName`,
+        `cee`.`name` AS `buyName`
+        FROM
+        `fa_factoring_cost` `ffc`
+        LEFT JOIN `fa_factoring_flow` `fff` ON
+        `fff`.`id` = `ffc`.`factoringId`
+        LEFT JOIN `cu_enterprise` `ce` ON
+        `ce`.`id` = `fff`.`sellEnterpriseId`
+        LEFT JOIN `cu_enterprise` `cee` ON
+        `cee`.`id` = `fff`.`buyEnterpriseId`
+        LEFT JOIN `fa_product` `fp` ON
+        `fp`.`id` = `fff`.`productId`
+        <where>
+            1=1
+            <if test="id != null and id != '' ">
+                and ffc.id like #{id,jdbcType=BIGINT}
+            </if>
+            <if test="projectCode != null and projectCode != '' ">
+                and fff.projectCode like #{projectCode,jdbcType=VARCHAR}
+            </if>
+            <if test="enterpriseName != null and enterpriseName != '' ">
+                and ce.name like #{enterpriseName,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != '' ">
+                and ffc.status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="modified_s!=null and modified_s!='' ">
+                and ffc.created <![CDATA[ >= ]]> #{modified_s}
+            </if>
+            <if test="modified_e!=null and modified_e!='' ">
+                and ffc.created   <![CDATA[ <= ]]> #{modified_e}
+            </if>
+        </where>
+        order by ffc.id desc
+    </select>
+</mapper>

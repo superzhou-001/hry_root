@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.scm.project.dao.RedeemDetailDao">
+    <resultMap id="resultMap" type="hry.scm.project.model.vo.RedeemDetailVo"></resultMap>
+
+    <select id="findAlldetailBySql" parameterType="java.util.Map"
+            resultMap="resultMap">
+        SELECT d.id AS detailId, d.number, d.goodsName,d.surplusCount,d.inspectionNo,d.location,d.caseNo,d.area,d.line,d.layer,d.queue,r.backCount,r.backWeight
+        from scm_mortgage_detail d LEFT JOIN scm_redeem_detail r on d.id=r.detailId and r.redeemTotalId= #{id}
+        <where>
+            1=1
+            <if test="totalId !=null and totalId!='' ">
+                and d.totalId = #{totalId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

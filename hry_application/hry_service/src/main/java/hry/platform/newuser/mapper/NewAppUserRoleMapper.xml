@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppUserRoleDao">
+
+	<resultMap id="BaseResultMap" type="hry.platform.newuser.model.NewAppUserRole">
+	</resultMap>
+
+	<select id="findByAppRole" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select * from new_app_user_role where roleId = #{roleId,jdbcType=BIGINT}
+	</select>
+
+	<select id="findByAppUser" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select * from new_app_user_role where userId = #{userId,jdbcType=BIGINT}
+	</select>
+
+	<select id="findUserRoleList" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT aur.*, ar.`name` as roleName
+		FROM new_app_user_role aur
+		LEFT JOIN new_app_role ar
+		ON aur.roleid = ar.id
+		WHERE aur.userid = #{userid}
+	</select>
+
+</mapper>

@@ -1,0 +1,94 @@
+server:
+  port: 7770
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://${EUREKA_HOST}:7700/eureka/
+
+# spring配置
+spring:
+  application:
+    name: hry-api
+  # 数据源配置
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DB}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PW}
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      test-on-borrow: true
+  rabbitmq:
+    host: ${MQ_HOST}
+    port: 5672
+    username: ${MQ_USER}
+    password: ${MQ_PW}
+    virtual-host: ${MQ_VH}
+    exchangeName: finance.direct.exchange
+
+# mybatis配置
+mybatis:
+  mapper-locations: classpath*:hry/**/mapper/*.xml
+  configuration:
+    default-fetch-size: 100
+    #mybatis日志
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+# 通用mapper配置
+mapper:
+  mappers:
+    - hry.core.mvc.dao.BaseDao
+  not-empty: false
+  identity: MYSQL
+  #    before: true
+
+# 分页配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+# redis配置
+redis:
+  modeService: redisSingletonServiceImpl # redisClusterServiceImpl 集群模式  redisSingletonServiceImpl 单机模式
+  password: ${REDIS_PW}
+  maxTotal: 500
+  #redis 单机模式配置
+  url: ${REDIS_HOST}
+  port: 6379
+  #redis集群模式配置
+  database: 0
+  timeout: 3000
+  cluster:
+    #设置key的生存时间，当key过期时，它会被自动删除；
+    expire-seconds: 120
+    #设置命令的执行时间，如果超过这个时间，则报错;
+    command-timeout: 5000
+    #设置redis集群的节点信息，其中namenode为域名解析，通过解析域名来获取相应的地址;
+    nodes: 192.168.0.52:3000, 192.168.0.52:3001, 192.168.0.52:3002, 192.168.0.52:3003, 192.168.0.52:3004, 192.168.0.52:3005
+  jedis:
+    pool:
+      max-idle: 300 # 最大空闲实例的个数
+      min-idle: 100 #最小空闲实例个数
+# 业务配置
+# oss
+app:
+  oss:
+    open: true
+    endpoint: http://oss-cn-beijing.aliyuncs.com
+    accessKeyId: LTAI4GEoDaSxsg4TPHjr1sHP
+    accessKeySecret: sq8IZ4DHqq3UlASKnddqPUzxVpzvlF
+    privateBucketName: hry-exchange-private
+    publicBucketName: hry-exchange-public
+  oauthKey: ${OAUTH_KEY}
+  oauthIp: ${OAUTH_IP}
+
+elasticsearch:
+  host: ${ES_HOST}:9200
+  username: ${ES_USER}
+  password: ${ES_PW}

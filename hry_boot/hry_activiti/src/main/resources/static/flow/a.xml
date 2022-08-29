@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+    <process id="Process_0u8ki5h">
+        <startEvent id="Event_06m6s9e" name="开始">
+            <outgoing>Flow_0ihmnvy</outgoing>
+        </startEvent>
+        <task id="Activity_08y6wfc" name="起床">
+            <incoming>Flow_0ihmnvy</incoming>
+            <outgoing>Flow_1ojpwqp</outgoing>
+        </task>
+        <sequenceFlow id="Flow_0ihmnvy" sourceRef="Event_06m6s9e" targetRef="Activity_08y6wfc" />
+        <task id="Activity_0ehnfnk" name="吃早饭">
+            <incoming>Flow_1ojpwqp</incoming>
+            <outgoing>Flow_0hr3xl0</outgoing>
+        </task>
+        <sequenceFlow id="Flow_1ojpwqp" sourceRef="Activity_08y6wfc" targetRef="Activity_0ehnfnk" />
+        <task id="Activity_1m7y2ft" name="上班">
+            <incoming>Flow_0hr3xl0</incoming>
+            <outgoing>Flow_0pxwr8o</outgoing>
+        </task>
+        <sequenceFlow id="Flow_0hr3xl0" sourceRef="Activity_0ehnfnk" targetRef="Activity_1m7y2ft" />
+        <task id="Activity_1cpvs3v" name="下班">
+            <incoming>Flow_0pxwr8o</incoming>
+            <outgoing>Flow_1dornjl</outgoing>
+        </task>
+        <sequenceFlow id="Flow_0pxwr8o" sourceRef="Activity_1m7y2ft" targetRef="Activity_1cpvs3v" />
+        <task id="Activity_1wk5xz1" name="回家">
+            <incoming>Flow_1dornjl</incoming>
+            <outgoing>Flow_15lkqa6</outgoing>
+        </task>
+        <sequenceFlow id="Flow_1dornjl" sourceRef="Activity_1cpvs3v" targetRef="Activity_1wk5xz1" />
+        <task id="Activity_19e1cex" name="睡觉">
+            <incoming>Flow_15lkqa6</incoming>
+            <outgoing>Flow_19uwxof</outgoing>
+        </task>
+        <sequenceFlow id="Flow_15lkqa6" sourceRef="Activity_1wk5xz1" targetRef="Activity_19e1cex" />
+        <endEvent id="Event_1ppkzfh" name="结束">
+            <incoming>Flow_19uwxof</incoming>
+        </endEvent>
+        <sequenceFlow id="Flow_19uwxof" sourceRef="Activity_19e1cex" targetRef="Event_1ppkzfh" />
+    </process>
+    <bpmndi:BPMNDiagram id="sid-74620812-92c4-44e5-949c-aa47393d3830">
+        <bpmndi:BPMNPlane id="sid-cdcae759-2af7-4a6d-bd02-53f3352a731d" bpmnElement="Process_0u8ki5h">
+            <bpmndi:BPMNEdge id="Flow_19uwxof_di" bpmnElement="Flow_19uwxof">
+                <omgdi:waypoint x="1200" y="240" />
+                <omgdi:waypoint x="1262" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_15lkqa6_di" bpmnElement="Flow_15lkqa6">
+                <omgdi:waypoint x="1040" y="240" />
+                <omgdi:waypoint x="1100" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1dornjl_di" bpmnElement="Flow_1dornjl">
+                <omgdi:waypoint x="880" y="240" />
+                <omgdi:waypoint x="940" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0pxwr8o_di" bpmnElement="Flow_0pxwr8o">
+                <omgdi:waypoint x="720" y="240" />
+                <omgdi:waypoint x="780" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0hr3xl0_di" bpmnElement="Flow_0hr3xl0">
+                <omgdi:waypoint x="560" y="240" />
+                <omgdi:waypoint x="620" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1ojpwqp_di" bpmnElement="Flow_1ojpwqp">
+                <omgdi:waypoint x="400" y="240" />
+                <omgdi:waypoint x="460" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0ihmnvy_di" bpmnElement="Flow_0ihmnvy">
+                <omgdi:waypoint x="248" y="240" />
+                <omgdi:waypoint x="300" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="Event_06m6s9e_di" bpmnElement="Event_06m6s9e">
+                <omgdc:Bounds x="212" y="222" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="219" y="265" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_08y6wfc_di" bpmnElement="Activity_08y6wfc">
+                <omgdc:Bounds x="300" y="200" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_0ehnfnk_di" bpmnElement="Activity_0ehnfnk">
+                <omgdc:Bounds x="460" y="200" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_1m7y2ft_di" bpmnElement="Activity_1m7y2ft">
+                <omgdc:Bounds x="620" y="200" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_1cpvs3v_di" bpmnElement="Activity_1cpvs3v">
+                <omgdc:Bounds x="780" y="200" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_1wk5xz1_di" bpmnElement="Activity_1wk5xz1">
+                <omgdc:Bounds x="940" y="200" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_19e1cex_di" bpmnElement="Activity_19e1cex">
+                <omgdc:Bounds x="1100" y="200" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_1ppkzfh_di" bpmnElement="Event_1ppkzfh">
+                <omgdc:Bounds x="1262" y="222" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="1269" y="265" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+        <bpmndi:BPMNLabelStyle id="sid-e0502d32-f8d1-41cf-9c4a-cbb49fecf581">
+            <omgdc:Font name="Arial" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+        </bpmndi:BPMNLabelStyle>
+        <bpmndi:BPMNLabelStyle id="sid-84cb49fd-2f7c-44fb-8950-83c3fa153d3b">
+            <omgdc:Font name="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+        </bpmndi:BPMNLabelStyle>
+    </bpmndi:BPMNDiagram>
+</definitions>

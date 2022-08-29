@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.fa.dao.FaFundIntentDao">
+    <resultMap id="BaseResultMap" type="hry.business.fa.model.FaFundIntent"></resultMap>
+
+    <select id="findFundIntentList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select f.id, f.factoringId, f.projectCode, f.sellEnterpriseName, f.financingMoney, f.loanConfirmDate, f.financingTerm,
+        f.payintentPeriod, f.intentDate, f.`status`, f.allPayment, f.allInterest, f.allCost,
+        f.realityIncomeMoney, f.realityIntentDate, f.remark, f.affirmIncomeMoney, f.affirmIntentDate, f.affirmRemark, f.refundImage
+        from (
+            select fi.id, ff.id as factoringId, ff.projectCode, ff.sellEnterpriseName, ff.financingMoney, ff.loanConfirmDate, ff.financingTerm,
+            fi.payintentPeriod, fi.intentDate,
+            fi.realityIncomeMoney, fi.realityIntentDate, fi.remark, fi.affirmIncomeMoney,
+            fi.affirmIntentDate, fi.affirmRemark, fi.refundImage,
+            sum(case when fi.fundType = 'principalRepayment' THEN fi.incomeMoney END) as allPayment,
+            sum(case when fi.fundType = 'loanInterest' THEN fi.incomeMoney END) as allInterest,
+            sum(case when fi.fundType = 'loanCost' THEN fi.incomeMoney END) as allCost,
+            case when sum(fi.incomeMoney) != sum(realityIncomeMoney) THEN 1
+            when sum(fi.incomeMoney) = sum(realityIncomeMoney) <![CDATA[ && ]]> sum(fi.incomeMoney) != sum(fi.affirmIncomeMoney) THEN 3
+            when sum(fi.incomeMoney) = sum(realityIncomeMoney) <![CDATA[ && ]]> sum(fi.incomeMoney) = sum(fi.affirmIncomeMoney) THEN 5
+            END as `status`
+            from fa_fund_intent fi
+            LEFT JOIN fa_factoring_flow ff
+            ON fi.factoringId = ff.id
+            WHERE 1=1
+            and ff.loanConfirmStatus = 3
+            and fi.fundType != 'principalLending'
+            GROUP BY fi.payintentPeriod
+        ) as f
+        where 1=1
+        <if test="type == 1">
+            and f.intentDate >= #{newDate}
+        </if>
+        <if test="type == 2">
+            and f.intentDate <![CDATA[ < ]]> #{newDate}
+        </if>
+        <if test="projectCode != null and projectCode != ''">
+            and f.projectCode like #{projectCode}
+        </if>
+        <if test="sellEnterpriseName != null and sellEnterpriseName != ''">
+            and f.sellEnterpriseName like #{sellEnterpriseName}
+        </if>
+        <if test="projectManagerId != null and projectManagerId != ''">
+            and f.projectManagerId = #{projectManagerId}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and f.intentDate >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and f.intentDate <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="status != null and status != ''">
+            and f.`status` = #{status}
+        </if>
+    </select>
+</mapper>

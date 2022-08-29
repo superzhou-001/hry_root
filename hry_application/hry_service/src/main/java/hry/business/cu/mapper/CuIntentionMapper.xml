@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.cu.dao.CuIntentionDao">
+
+
+    <resultMap id="BaseResultMap" type="hry.business.cu.model.CuIntention">
+    </resultMap>
+
+    <select id="findPageBySql" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        ci.*,
+        nau.userName as userName
+        FROM
+        cu_intention ci
+        LEFT JOIN new_app_user AS nau ON ci.userId = nau.id
+        <where>
+            1=1
+            <if test="intentionCode != null and intentionCode != '' ">
+                and ci.intentionCode like #{intentionCode,jdbcType=VARCHAR}
+            </if>
+            <if test="type != null and type != '' ">
+                and ci.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="enterpriseContacts != null and enterpriseContacts != '' ">
+                and ci.enterpriseContacts like #{enterpriseContacts,jdbcType=VARCHAR}
+            </if>
+            <if test="movePhone != null and movePhone != '' ">
+                and ci.movePhone like #{movePhone,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != '' ">
+                and ci.status = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="modified_s!=null and modified_s!='' ">
+                and ci.created <![CDATA[ >= ]]> #{modified_s}
+            </if>
+            <if test="modified_e!=null and modified_e!='' ">
+                and ci.created   <![CDATA[ <= ]]> #{modified_e}
+            </if>
+        </where>
+        order by ci.id desc
+    </select>
+
+
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.scm.project.dao.RedeemTotalDao">
+    <resultMap id="resultMap" type="hry.scm.project.model.vo.RedeemTotalVo"></resultMap>
+    <select id="findRedeemTotalBySql" parameterType="java.util.Map"
+            resultMap="resultMap">
+        SELECT r.id,r.redeemId,r.totalId ,r.backCount as curBackCount,r.backWorth as curBackWorth,r.backWeight as curBackWeight,
+        t.goodsName,t.mortWeight,t.mortCount,t.mortPrice,t.mortTotalPrice,t.surplusCount,t.surplusWeight,t.surTotalPrice
+        from scm_redeem_total r LEFT JOIN scm_mortgage_total t on r.totalId=t.id
+        <where>
+            1=1
+            <if test="redeemId !=null and redeemId!='' ">
+                and r.redeemId = #{redeemId}
+            </if>
+
+        </where>
+
+    </select>
+
+</mapper>

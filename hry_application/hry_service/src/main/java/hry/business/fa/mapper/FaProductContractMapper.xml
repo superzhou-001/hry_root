@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.fa.dao.FaProductContractDao">
+    <resultMap id="baseResult" type="hry.business.fa.model.FaProductContract"></resultMap>
+    <resultMap id="templateResult" type="hry.business.ct.model.CtContractTemplate"></resultMap>
+    <select id="findProductContractList" parameterType="java.util.Map" resultMap="baseResult">
+        select fp.id as productid, fp.productname, fpt.id as productTypeId, fpt.typename as productTypeName, count(fpc.contractid) as number
+        from fa_product_contract fpc
+        LEFT JOIN fa_product fp
+        ON fpc.productid = fp.id
+        LEFT JOIN fa_product_type fpt
+        ON fp.typeid = fpt.id
+        WHERE 1=1
+        <if test="productname != null and productname != ''">
+            and fp.productname like #{productname}
+        </if>
+        <if test="productid != null and productid != ''">
+            and fp.productid = #{productid}
+        </if>
+        <if test="productTypeId != null and productTypeId != ''">
+            and fpt.id = #{productTypeId}
+        </if>
+        GROUP BY fpc.productid
+    </select>
+
+    <select id="findContractTemplate" parameterType="java.lang.Long" resultMap="templateResult">
+        SELECT
+        cct.*, cctp.typeName as typeName,cctp.purposeType as purposeType
+        FROM
+        fa_product_contract fpc
+        left join
+        ct_contract_template cct
+        on fpc.contractid = cct.id
+        LEFT JOIN ct_contract_type cctp ON cct.contractTypeId = cctp.id
+        where 1=1
+        and fpc.productid = #{productid}
+    </select>
+</mapper>

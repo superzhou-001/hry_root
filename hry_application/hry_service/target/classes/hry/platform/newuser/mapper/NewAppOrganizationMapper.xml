@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppOrganizationDao">
+
+	<resultMap id="BaseResultMap" type="hry.platform.newuser.model.NewAppOrganization">
+	</resultMap>
+
+	<select id="findSonOrganization" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select * from new_app_organization where pid = #{id,jdbcType=BIGINT}
+	</select>
+
+
+</mapper>

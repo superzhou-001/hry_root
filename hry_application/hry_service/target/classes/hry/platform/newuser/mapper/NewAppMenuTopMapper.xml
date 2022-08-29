@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppMenuTopDao">
+    <select id="getMaxOrderNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select
+            IFNULL(max(orderno),0) + 1
+        from
+            new_app_menu_top
+        <where>
+            1 = 1
+            <if test="pkey != null and pkey != ''">
+                and pkey = #{pkey};
+            </if>
+        </where>
+    </select>
+</mapper>

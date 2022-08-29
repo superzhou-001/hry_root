@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppUserPostDao">
+    <resultMap id="BaseResultMap" type="hry.platform.newuser.model.NewAppUserPost"></resultMap>
+    <select id="findPageBySql" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        aup.id, aup.postid, aup.userid, aup.created,
+        auo.organizationid,
+        ao.`name` as organizationName,
+        au.`name`, au.userName, au.islock
+        FROM new_app_user_post aup
+        LEFT JOIN
+        new_app_user au
+        ON au.id = aup.userid
+        LEFT JOIN
+        new_app_user_organization auo
+        ON aup.userid = auo.userid
+        LEFT JOIN
+        new_app_organization ao
+        ON ao.id = auo.organizationid
+        WHERE aup.postid = #{postid}
+        <if test="name != null and name != ''">
+            and au.`name` like #{name}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and aup.created >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and aup.created<![CDATA[ <= ]]> #{endTime}
+        </if>
+    </select>
+
+    <select id="findUserPostList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT aup.*, ap.`name` as postName
+        FROM new_app_user_post aup
+        LEFT JOIN new_app_post ap
+        ON aup.postid = ap.id
+        WHERE aup.userid = #{userid}
+	</select>
+</mapper>

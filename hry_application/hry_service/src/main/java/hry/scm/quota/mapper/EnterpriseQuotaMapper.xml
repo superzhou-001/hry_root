@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.scm.quota.dao.EnterpriseQuotaDao">
+    <resultMap id="BaseResultMap" type="hry.scm.quota.model.EnterpriseQuota">
+    </resultMap>
+    <select id="getEnterpriseSumQuota" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT sum(sumQuotaValue) sumQuotaValue,sum(usedQuotaValue) usedQuotaValue,sum(surplusQuotaValue) surplusQuotaValue
+        FROM scm_enterprise_quota
+        <where>
+           enterpriseId = #{enterpriseId,jdbcType=BIGINT}
+        </where>
+    </select>
+
+    <select id="getEnterpriseQuotaList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+            eq.id,
+            se.id enterpriseId,
+            se.enterpriseName,
+            se.operName,
+            se.operMobile,
+            eq.aduitStatus,
+            eq.sumQuotaValue,
+            eq.usedQuotaValue,
+            eq.surplusQuotaValue,
+            se.registCapi,
+            se.yearTradeVolume,
+            CONCAT(se.province,se.city,se.county) address,
+            eq.created,
+            eq.modified
+        FROM
+            scm_enterprise_quota eq
+        LEFT JOIN scm_enterprise se ON se.id = eq.enterpriseId
+        <where>
+            1=1
+            <if test="fundSupportId != null and fundSupportId != '' ">
+                and  eq.fundSupportId = #{fundSupportId,jdbcType=BIGINT}
+            </if>
+            <if test="enterpriseId != null and enterpriseId != '' ">
+                and  eq.enterpriseId = #{enterpriseId,jdbcType=BIGINT}
+            </if>
+            <if test="isValid != null and isValid != '' ">
+                and  eq.isValid = #{isValid,jdbcType=TINYINT}
+            </if>
+            <if test="aduitStatus != null and aduitStatus != '' ">
+                and  eq.aduitStatus = #{aduitStatus,jdbcType=TINYINT}
+            </if>
+
+        </where>
+    </select>
+
+
+
+</mapper>

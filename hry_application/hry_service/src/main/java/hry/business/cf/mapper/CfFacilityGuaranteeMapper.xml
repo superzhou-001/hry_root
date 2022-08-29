@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.cf.dao.CfFacilityGuaranteeDao">
+
+    <resultMap id="BaseResultMap" type="hry.business.cf.model.CfFacilityGuarantee">
+    </resultMap>
+
+    <select id="findPageBySql" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+            cfg.*,
+            IF ( cfg.customerType = 1,
+            (SELECT NAME FROM cu_person WHERE id = cfg.customerSubjectId LIMIT 1 ),
+            (SELECT NAME FROM cu_enterprise WHERE id = cfg.customerSubjectId LIMIT 1 )
+            ) as guarantorName
+            FROM
+                cf_facility_guarantee cfg
+            ORDER BY
+        cfg.id DESC
+    </select>
+
+</mapper>

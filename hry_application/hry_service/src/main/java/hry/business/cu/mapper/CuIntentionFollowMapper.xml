@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.cu.dao.CuIntentionFollowDao">
+    <resultMap id="BaseResultMap" type="hry.business.cu.model.CuIntentionFollow">
+    </resultMap>
+
+    <resultMap type="hry.business.cu.model.CuIntentionFollow" id="followMap">
+        <id column="id" property="id"/>
+        <collection property="list" ofType="hry.business.cu.model.CuIntentionFollowComment" column="id" select="findCommentByFollowId"/>
+    </resultMap>
+
+    <!-- 查询意向跟进信息 带评论 -->
+    <select id="findFollowAndCommentByIntentionId" resultMap="followMap">
+		SELECT cif.* FROM cu_intention_follow cif WHERE cif.intentionId = #{intentionId} and cif.planFollowStatus=2 order by cif.id desc
+	</select>
+
+    <select id="findCommentByFollowId" resultType="hry.business.cu.model.CuIntentionFollowComment">
+		SELECT
+            cifc.*, cifc2.userName AS parentUserName,
+            cifc2.content AS parentContent,
+            cifc2.created AS parentCreated
+        FROM
+            cu_intention_follow_comment cifc
+        LEFT JOIN cu_intention_follow_comment cifc2 ON cifc.parentId = cifc2.id
+        WHERE
+            cifc.intentionfollowId = #{id}
+        order by cifc.id desc
+	</select>
+
+
+</mapper>

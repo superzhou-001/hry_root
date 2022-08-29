@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.scm.enterprise.dao.ScmEnterpriseDao">
+    <resultMap id="BaseResultMap" type="hry.scm.enterprise.model.ScmEnterprise">
+    </resultMap>
+    <select id="findPageBySql" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+            stt.*,cct.mobile,cct.username
+        FROM
+            scm_enterprise AS stt
+        LEFT JOIN scm_user_relation AS sur on sur.infoId=stt.id
+        LEFT JOIN cu_customer AS cct ON cct.id=sur.customerId
+        <where>
+            sur.role=1 and sur.userType=1
+            <if test="status != null and status != '' ">
+                and stt.status like #{status,jdbcType=INTEGER}
+            </if>
+            <if test="enterpriseName != null and enterpriseName != '' ">
+                and stt.enterpriseName like #{enterpriseName,jdbcType=VARCHAR}
+            </if>
+            <if test="username != null and username != '' ">
+                and cct.username like #{username,jdbcType=VARCHAR}
+            </if>
+            <if test="mobile != null and mobile != '' ">
+                and cct.mobile like #{mobile,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

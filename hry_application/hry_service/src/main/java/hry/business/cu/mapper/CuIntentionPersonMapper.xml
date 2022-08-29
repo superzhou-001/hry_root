@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.business.cu.dao.CuIntentionPersonDao">
+    <resultMap id="BaseResultMap" type="hry.business.cu.model.CuPerson">
+    </resultMap>
+    <select id="getIntentionPersonByIntentionId" parameterType="java.util.Map"
+            resultType="hry.business.cu.model.CuPerson">
+        SELECT
+        cp.*
+        FROM
+        cu_intention_person cip
+        LEFT JOIN cu_person cp ON cip.personId = cp.id
+        WHERE
+        cip.intentionId = #{cuIntentionId}
+        AND cip.isMainPerson = 1
+        AND cip.type = 3
+    </select>
+
+    <select id="findIntentionPersonByIntentionId" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        cp.*,
+        cip.id as cipId
+        FROM
+        cu_intention_person cip
+        LEFT JOIN cu_person cp ON cip.personId = cp.id
+        WHERE
+        cip.intentionId = #{cuIntentionId}
+        AND cip.type = 3
+        order by cip.id desc
+    </select>
+
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.scm.project.dao.StorageDao">
+	<resultMap id="BaseResultMap" type="hry.scm.project.model.Storage"></resultMap>
+
+    <delete id="removeStorage" parameterType="java.lang.String">
+		delete from scm_storage where isMortgage= #{isMortgage}
+	</delete>
+
+	<select id="findStorage" parameterType="java.util.Map"
+			resultMap="BaseResultMap">
+		SELECT id,goodsName,weight,goodsCount,inspectionNo,caseNo,location,area,line,queue,layer,0 as mortWeight,0 as mortCount
+		from scm_storage where isMortgage=0
+		<if test="goodsName !=null and goodsName!='' ">
+		 and goodsName= #{goodsName}
+		</if>
+		UNION
+		SELECT totalId as id,goodsName,weight,goodsCount,inspectionNo,caseNo,location,area,line,queue,layer,mortWeight,mortCount
+		from scm_mortgage_detail where 1=1
+		<if test="goodsName !=null and goodsName!='' ">
+			and goodsName= #{goodsName}
+		</if>
+		<if test="totalId !=null and totalId!='' ">
+			and totalId= #{totalId}
+		</if>
+
+
+
+	</select>
+
+</mapper>

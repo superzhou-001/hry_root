@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hry.platform.newuser.dao.NewAppOrganizationChargeDao">
+    <resultMap id="BaseResultMap" type="hry.platform.newuser.model.NewAppOrganizationCharge">
+    </resultMap>
+    <select id="findPageBySql" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT aoc.*, ao.`name` as organizationName,
+        au.`name`, au.userName, au.islock
+        FROM new_app_organization_charge aoc
+        LEFT JOIN new_app_organization ao
+        ON aoc.organizationid = ao.id
+        LEFT JOIN new_app_user au
+        ON aoc.userid = au.id
+        WHERE aoc.organizationid = #{organizationid}
+        <if test="name != null and name != ''">
+            and au.`name` like #{name}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and aoc.created >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and aoc.created<![CDATA[ <= ]]> #{endTime}
+        </if>
+    </select>
+</mapper>
